@@ -8,7 +8,7 @@ from Hack.plugins import ALL_MODULES
 async def initiate_bot():
     LOGGER(__name__).info('IMPORTING MODULES')
     for all_module in ALL_MODULES:
-        importlib.import_module("Hack.plugins." + all_module)
+        importlib.import_module(f"Hack.plugins.{all_module}")
     LOGGER(__name__).info('MODULES IMPORTED SUCCESSFULLY')
     await bot.run_until_disconnected()
 

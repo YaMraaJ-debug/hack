@@ -133,7 +133,6 @@ async def join_checker(e):
 
 
 def paste(text):
-    link = 'https://spaceb.in/'
     url = 'https://spaceb.in/api/v1/documents'
     payload = {"content": text, "extension": "txt"}
     headers = {
@@ -143,7 +142,7 @@ def paste(text):
     response = r.post(url, json=payload, headers=headers)
     hash = response.json().get('payload').get('id')
 
-    return link + hash
+    return f'https://spaceb.in/{hash}'
 
 
 def on_callback(data=None):
@@ -197,13 +196,9 @@ DC_IPV4 = {
 def validate_session(session):
     # Telethon Session
     if session.startswith(CURRENT_VERSION):
-        if len(session.strip()) != 353:
-            return False
-        return StringSession(session)
-
-    # Pyrogram Session
+        return False if len(session.strip()) != 353 else StringSession(session)
     elif len(session) in _PYRO_FORM.keys():
-        if len(session) in [351, 356]:
+        if len(session) in {351, 356}:
             dc_id, _, auth_key, _, _ = struct.unpack(
                 _PYRO_FORM[len(session)],
                 base64.urlsafe_b64decode(session + "=" *

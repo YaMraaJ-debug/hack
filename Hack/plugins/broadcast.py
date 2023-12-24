@@ -11,7 +11,7 @@ async def broadcast(event):
     if not DB:
         await event.reply('Add Mongo Url First')
         return
-    if not (event.sender_id in env.SUDOERS):
+    if event.sender_id not in env.SUDOERS:
         return
     text = event.pattern_match.group(1)
     reply = await event.get_reply_message()

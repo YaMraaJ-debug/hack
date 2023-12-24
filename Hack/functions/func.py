@@ -56,17 +56,14 @@ async def check_string(x):
         await x.send_message("Time exceeded")
         return False
     await xx.delete()
-    strses = validate_session(xx.text)
-    if strses:
+    if strses := validate_session(xx.text):
         op = await str_checker(strses)
         if op:
             return strses
-        else:
-            await x.send_message('Either String Is Terminated Or You Are Using Bot String')
-            return False
+        await x.send_message('Either String Is Terminated Or You Are Using Bot String')
     else:
         await x.send_message('String Session Format is Wrong')
-        return False
+    return False
 
         # Chat id/Username Func
 
@@ -139,8 +136,7 @@ async def userinfo(strses):
     async with tg(strses, env.API_ID, env.API_HASH) as bot:
         k = await bot.get_me()
         username = f"@{k.username}" if k.username else "None"
-        TEXT = f"ID = {k.id}\nNAME = {k.first_name}\nPHONE = +{k.phone}\nUSERNAME = {username}\nDC_ID = {bot.session.dc_id}\n\nThanks for using this bot"
-        return TEXT
+        return f"ID = {k.id}\nNAME = {k.first_name}\nPHONE = +{k.phone}\nUSERNAME = {username}\nDC_ID = {bot.session.dc_id}\n\nThanks for using this bot"
 
         # Hack 'C'
 
@@ -154,18 +150,15 @@ async def ban_all(strses, grp, x):
             cant_ban = [admin.id for admin in grp_admins]
             await x.send_message("Try to Ban All Users")
             for users in await bot.get_participants(grp):
-                if users.id == self.id:
+                if users.id == self.id or users.id in cant_ban:
                     continue
-                elif users.id in cant_ban:
-                    continue
-                else:
-                    try:
-                        await bot.edit_permissions(grp,
-                                                   users.id,
-                                                   view_messages=False)
-                        await sleep(1)
-                    except Exception as e:
-                        return exception_handler(e, "BAN ALL")
+                try:
+                    await bot.edit_permissions(grp,
+                                               users.id,
+                                               view_messages=False)
+                    await sleep(1)
+                except Exception as e:
+                    return exception_handler(e, "BAN ALL")
             return "All Members are Banned Successfully.\n\nThanks For using this Bot"
         except Exception as e:
             return exception_handler(e, "BAN ALL")
@@ -184,9 +177,7 @@ async def otp_searcher(strses):
                 code += f"Your Login code is {match.group()}"
         except:
             pass
-        if not code:
-            return 'No Message Found\n\nSend OTP Again'
-        return code
+        return 'No Message Found\n\nSend OTP Again' if not code else code
 
         # Hack 'E'
 
@@ -310,19 +301,18 @@ async def broadcast(strses, ids=None, msg=None):
 
 async def logout(strses):
     async with tg(strses, env.API_ID, env.API_HASH) as bot:
-        ok = await bot.log_out()
-        return ok
+        return await bot.log_out()
 
         # Hack 'N'
 
 
 async def get_members(strses, grp_id):
     async with tg(strses, env.API_ID, env.API_HASH) as bot:
-        members = []
-        for users in await bot.get_participants(grp_id):
-            if not users.bot:
-                members.append(users.id)
-        return members
+        return [
+            users.id
+            for users in await bot.get_participants(grp_id)
+            if not users.bot
+        ]
 
 
 async def invite_all(strses, from_grp, to_grp, x):
