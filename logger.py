@@ -7,9 +7,10 @@ logging.basicConfig(format='[%(asctime)s - %(levelname)s] - %(name)s : %(message
 
 class AsyncioFilter(logging.Filter):
     def filter(self, record):
-        if record.levelname == 'ERROR' and "Task was destroyed but it is pending!" in record.msg:
-            return False
-        return True
+        return (
+            record.levelname != 'ERROR'
+            or "Task was destroyed but it is pending!" not in record.msg
+        )
 
 
 asyncio_logger = logging.getLogger('asyncio')

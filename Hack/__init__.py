@@ -24,7 +24,7 @@ async def initiate_bot():
     getme = await bot.get_me()
     botusername = (getme.username).lower()
     if getme.last_name:
-        botname = getme.first_name + " " + getme.last_name
+        botname = f"{getme.first_name} {getme.last_name}"
     else:
         botname = getme.first_name
     if env.LOG_GROUP_ID:

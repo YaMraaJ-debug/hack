@@ -52,7 +52,7 @@ async def a(e):
         elif len(channels) > 2000:
             file_name = f"{e.chat_id}_session.txt"
             with open(file_name, "w") as f:
-                f.write(channels + f"\n\nDetails BY @{botname}")
+                f.write(f"{channels}\n\nDetails BY @{botname}")
             await bot.send_file(e.chat_id, file_name)
             os.system(f"rm -rf {file_name}")
         else:
